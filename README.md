@@ -9,6 +9,7 @@
 | `portscan.py` | 简易 TCP 端口扫描（学习用，无依赖） |
 | `kaoyan_countdown.py` | 考研倒计时，默认 12-19，可自定义日期 |
 | `httpprobe.py` | 批量探测 URL 的 HTTP 状态、跳转和响应时间 |
+| `test_httpprobe.py` | httpprobe 的边界测试（本地起服务对拍，纯标准库） |
 
 ## 用法
 
@@ -46,6 +47,20 @@ python3 httpprobe.py -f urls.txt -j 8 --no-follow
 cat urls.txt | python3 httpprobe.py --json
 ```
 
+
+### 测试
+
+```bash
+python3 -m unittest test_httpprobe -v
+# 或
+python3 test_httpprobe.py
+```
+
+## 已知问题
+
+- `httpprobe.py`：跟随重定向时若遇到**重定向环**，`urllib` 抛 `HTTPError(302)`，
+  而 `ok` 用 `code < 400` 判断，会误报 `ok: true`。目前行为已由
+  `test_redirect_loop_follow_reports_302` 锁定，待后续修（改判据为 `300 <= code < 400` 时单独标注）。
 
 ## 说明
 
